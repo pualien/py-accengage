@@ -26,8 +26,8 @@ def reqs(*f):
     return [req for subreq in _reqs(*f) for req in subreq]
 
 
-setup(name='py-accengage',
-      version='0.1.1',
+setup(name='accengage',
+      version='0.1.2',
       url='https://github.com/pualien/py-accengage',
       license='MIT',
       author='Matteo Senardi',
