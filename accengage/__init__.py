@@ -1,1 +1,1 @@
-from accengage import *
+from .accengage import Accengage

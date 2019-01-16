@@ -27,7 +27,7 @@ def reqs(*f):
 
 
 setup(name='py-accengage',
-      version='0.1',
+      version='0.1.1',
       url='https://github.com/pualien/py-accengage',
       license='MIT',
       author='Matteo Senardi',
