@@ -77,16 +77,16 @@ class Accengage:
             querystring = {}
 
         if payload is None:
-            payload = {}
+            payload = json.dumps({})
 
         if method == "GET":
-            response = requests.request(method, api_url, headers=self.set_headers(payload), params=querystring)
+            response = requests.request(method, api_url, headers=self.set_headers(), params=querystring)
         if method == "POST" or method == "PUT" or method == "DELETE":
-            response = requests.request(method, api_url, data=payload, headers=self.set_headers(payload), params=querystring)
+            response = requests.request(method, api_url, data=payload, headers=self.set_headers(), params=querystring)
         return response.text, response.headers
 
-    def set_headers(self, payload):
-        self.set_time_signature(payload=payload)
+    def set_headers(self):
+        self.set_time_signature(payload=self.payload)
         self.headers = {
             'content-type': "application/json",
             'accengage-signature': self.accengage_signature,
@@ -109,7 +109,7 @@ class Accengage:
         df = pd.read_csv(data, sep=";", header=0, encoding='utf-8', error_bad_lines=False)
         if headers.get('Link'):
             response = requests.request("GET", headers['Link'].replace('<', '').replace('>; rel="next"', ''), headers=self.set_headers(), params={})
-            df = df.append(self.get_output(response.text, response.headers))
+            df = df.append(self.get_output_in_df(response.text, response.headers))
         else:
             pass
         return df
