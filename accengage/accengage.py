@@ -96,7 +96,7 @@ class Accengage:
         }
         return self.headers
 
-    def get_output_in_df(self, result, headers):
+    def get_output_in_list(self, result, headers):
         """
 
         :param result: response.text from api call
@@ -105,14 +105,14 @@ class Accengage:
         """
         data = BufferIO(result.encode())
         if len(result) == 0:
-            return pd.DataFrame()
-        df = pd.read_csv(data, sep=";", header=0, encoding='utf-8', error_bad_lines=False)
+            return []
+        data_list = pd.read_csv(data, sep=";", header=0, encoding='utf-8', error_bad_lines=False).to_dict('records')
         if headers.get('Link'):
             response = requests.request("GET", headers['Link'].replace('<', '').replace('>; rel="next"', ''), headers=self.set_headers(), params={})
-            df = df.append(self.get_output_in_df(response.text, response.headers))
+            data_list += self.get_output_in_list(response.text, response.headers)
         else:
             pass
-        return df
+        return data_list
 
     def get_users_df(self, partner_id, last_open=None):
-        return self.get_output_in_df(*self.get_users(partner_id=partner_id, last_open=last_open))
+        return pd.DataFrame(self.get_output_in_list(*self.get_users(partner_id=partner_id, last_open=last_open)))
